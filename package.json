@@ -1,0 +1,12 @@
+{
+  "name": "angry-birds-airlines",
+  "version": "1.0.0",
+  "description": "Sistema de registro de vuelos para Angry Birds Airlines",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Jostin Novoa",
+  "license": "MIT"
+}
