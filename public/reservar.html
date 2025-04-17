@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reservar Vuelo</title>
+</head>
+<body>
+  <h1>Reservar Vuelo</h1>
+
+  <div id="infoVuelo"></div>
+
+<h2>Reserva principal (pasajero 1)</h2>
+<form id="formReserva">
+  <input type="text" placeholder="Nombre" id="nombre" required><br><br>
+  <input type="text" placeholder="Apellido" id="apellido" required><br><br>
+  <input type="email" placeholder="Correo" id="correo" required><br><br>
+  <input type="text" placeholder="Documento de identidad" id="documento" required><br><br>
+
+  <label for="cantidad">¿Cuántas personas viajan en total?</label>
+  <input type="number" id="cantidad" min="1" max="5" value="1"><br><br>
+
+  <div id="pasajerosContainer"></div>
+
+  <h3>Datos simbólicos de tarjeta</h3>
+  <input type="text" placeholder="Número de tarjeta" required><br><br>
+  <input type="month" placeholder="Vencimiento" required><br><br>
+  <input type="number" placeholder="CVV" required><br><br>
+
+  <button type="submit">Confirmar reserva</button>
+</form>
+  <p id="mensaje"></p>
+
+  <script src="./reservar.js"></script>
+</body>
+</html>
+
+<div id="modalRecibo" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+background-color: rgba(0, 0, 0, 0.5); z-index:9999;">
+
+  <div id="contenidoRecibo" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+  background:#fff; padding:20px; border:2px solid #000; box-shadow: 2px 2px 10px #000; width: 90%; max-width: 400px;">
+  </div>
+
+</div>

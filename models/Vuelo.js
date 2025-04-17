@@ -11,7 +11,11 @@ const Vuelo = sequelize.define('Vuelo', {
     allowNull: false
   },
   fechaSalida: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  horaSalida: {
+    type: DataTypes.TIME, 
     allowNull: false
   },
   duracion: {

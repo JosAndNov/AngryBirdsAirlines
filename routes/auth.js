@@ -34,6 +34,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login
+// Login
 router.post('/login', async (req, res) => {
   const { correo, contraseña } = req.body;
 
@@ -58,11 +59,21 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.status(200).json({ mensaje: 'Login exitoso', token });
+    // Enviar también el nombre del usuario al frontend
+    res.status(200).json({
+      mensaje: 'Login exitoso',
+      token,
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        correo: usuario.correo
+      }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error en el servidor' });
   }
 });
+
 
 module.exports = router;

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio - Angry Birds Airlines</title>
+</head>
+<body>
+  <h1>Angry Birds Airlines 🐦</h1>
+  <div id="usuarioInfo"></div>
+
+  <nav>
+    <a href="/inicio.html">Inicio</a> |
+    <a href="/ofertas.html">Ofertas</a> |
+    <span id="usuarioAcciones"></span> |
+    <a href="/tuvuelo.html">Tu vuelo</a>
+  </nav>
+  
+  <div id="saludoUsuario" style="margin-top: 10px;"></div>
+
+  <hr>
+
+  <h2>Buscar vuelos</h2>
+  <form id="formBusqueda">
+    <input type="text" id="origen" placeholder="Origen" required>
+    <input type="text" id="destino" placeholder="Destino" required>
+    <input type="date" id="fecha" required>
+    <button type="submit">Buscar</button>
+  </form>
+
+  <div id="resultadoVuelos"></div>
+
+  <script src="./inicio.js"></script>
+</body>
+</html>

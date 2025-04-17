@@ -16,9 +16,13 @@ form.addEventListener('submit', async (e) => {
 
   if (res.ok) {
     document.getElementById('mensaje').innerText = '✅ Login exitoso';
+
+    // Guardar token y nombre del usuario
     localStorage.setItem('token', data.token);
-    // Redirigir a inicio o página protegida
-    // window.location.href = '/inicio.html';
+    localStorage.setItem('usuario', data.usuario.nombre);
+
+    // Redirigir al inicio
+    window.location.href = '/inicio.html';
   } else {
     document.getElementById('mensaje').innerText = `❌ ${data.mensaje || 'Error al iniciar sesión'}`;
   }

@@ -17,6 +17,9 @@ form.addEventListener('submit', async (e) => {
 
   if (res.ok) {
     document.getElementById('mensaje').innerText = '✅ Usuario registrado exitosamente';
+    setTimeout(() => {
+      window.location.href = '/login.html';
+    }, 1500); // le damos 1.5 segundos para que vea el mensaje
     // Redirigir al login (opcional):
     // window.location.href = '/login.html';
   } else {

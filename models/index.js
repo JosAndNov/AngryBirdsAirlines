@@ -16,9 +16,9 @@ Reserva.belongsTo(Vuelo);
 Usuario.hasMany(Notificacion);
 Notificacion.belongsTo(Usuario);
 
-// (Opcional) Relación: Promocion puede pertenecer a muchos usuarios
-Promocion.hasMany(Usuario, { foreignKey: 'promocionId' });
-Usuario.belongsTo(Promocion, { foreignKey: 'promocionId' });
+// Relación: Vuelo tiene una Promoción
+Vuelo.hasOne(Promocion, { foreignKey: 'vueloId' });
+Promocion.belongsTo(Vuelo, { foreignKey: 'vueloId' });
 
 module.exports = {
   Usuario,

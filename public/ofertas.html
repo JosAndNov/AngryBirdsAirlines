@@ -2,42 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Login - Angry Birds Airlines</title>
+  <title>Ofertas - Angry Birds Airlines</title>
 </head>
 <body>
-  <h1>Iniciar sesión</h1>
-  <form id="loginForm">
-    <input type="email" placeholder="Correo" id="correo" required><br><br>
-    <input type="password" placeholder="Contraseña" id="contraseña" required><br><br>
-    <button type="submit">Ingresar</button>
-  </form>
+  <h1>Angry Birds Airlines 🐦</h1>
 
-  <p id="mensaje"></p>
+  <nav>
+    <a href="/inicio.html">Inicio</a> |
+    <a href="/ofertas.html">Ofertas</a> |
+    <span id="usuarioAcciones"></span> |
+    <a href="/tuvuelo.html">Tu vuelo</a>
+  </nav>
 
-  <script>
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const correo = document.getElementById('correo').value;
-      const contraseña = document.getElementById('contraseña').value;
+  <div id="saludoUsuario" style="margin-top: 10px;"></div>
+  <hr>
 
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, contraseña })
-      });
+  <h2>🔥 Ofertas disponibles</h2>
+  <div id="listaOfertas"></div>
 
-      const data = await res.json();
-
-      if (res.ok) {
-        document.getElementById('mensaje').innerText = 'Login exitoso ✔️';
-        localStorage.setItem('token', data.token); // Guardamos el token
-        // Aquí podrías redirigir a la página de inicio
-        // window.location.href = '/inicio.html';
-      } else {
-        document.getElementById('mensaje').innerText = data.mensaje || 'Error al iniciar sesión';
-      }
-    });
-  </script>
+  <script src="./ofertas.js"></script>
 </body>
 </html>

@@ -18,6 +18,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 //rutas
 const authRoutes = require('./routes/auth');
 app.use('/api', authRoutes);
+
+const vueloRoutes = require('./routes/vuelos');
+app.use('/api', vueloRoutes);
+
+const ofertasRoutes = require('./routes/ofertas');
+app.use('/api', ofertasRoutes);
   
 app.get('/', (req, res) => {
   res.send('Servidor funcionando correctamente');
