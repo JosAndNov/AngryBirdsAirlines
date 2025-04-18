@@ -1,20 +1,15 @@
 const express = require('express');
-const { Vuelo, Reserva } = require('../models');
-const verificarToken = require('../middleware/auth');
-
 const router = express.Router();
+const verificarToken = require('../middleware/auth');
+const { Vuelo, Reserva, Pasajero, Usuario, Promocion, Tarjeta } = require('../models');
 
-// 🔍 Buscar vuelos por origen, destino y fecha exacta
+// 🔍 Buscar vuelos por origen, destino y fecha
 router.get('/vuelos', async (req, res) => {
   const { origen, destino, fecha } = req.query;
 
   try {
     const vuelos = await Vuelo.findAll({
-      where: {
-        origen,
-        destino,
-        fechaSalida: fecha
-      }
+      where: { origen, destino, fechaSalida: fecha }
     });
 
     if (vuelos.length === 0) {
@@ -32,15 +27,9 @@ router.get('/vuelos', async (req, res) => {
 router.get('/vuelos/:id', async (req, res) => {
   try {
     const vuelo = await Vuelo.findByPk(req.params.id);
-    if (!vuelo) {
-      return res.status(404).json({ mensaje: 'Vuelo no encontrado' });
-    }
+    if (!vuelo) return res.status(404).json({ mensaje: 'Vuelo no encontrado' });
 
-    // Buscar promoción si existe
-    const { Promocion } = require('../models');
-    const promo = await Promocion.findOne({
-      where: { vueloId: vuelo.id }
-    });
+    const promo = await Promocion.findOne({ where: { vueloId: vuelo.id } });
 
     let precioFinal = parseFloat(vuelo.precio);
     let tienePromocion = false;
@@ -71,44 +60,76 @@ router.get('/vuelos/:id', async (req, res) => {
   }
 });
 
-
-// ✈️ Reservar vuelo (requiere token)
+// ✈️ Reservar vuelo
 router.post('/reservar', verificarToken, async (req, res) => {
-  const { vueloId } = req.body;
-  const usuarioId = req.usuario.id;
-
   try {
+    const { vueloId, pasajeros, correoReserva, tarjeta } = req.body;
+    const usuarioId = req.usuario.id;
+
     const vuelo = await Vuelo.findByPk(vueloId);
-    if (!vuelo) {
-      return res.status(404).json({ mensaje: 'Vuelo no encontrado' });
+    if (!vuelo) return res.status(404).json({ mensaje: 'Vuelo no encontrado' });
+
+    const reservasActuales = await Pasajero.count({ where: { VueloId: vueloId } });
+    if (reservasActuales + pasajeros.length > vuelo.capacidad) {
+      return res.status(400).json({ mensaje: 'No hay suficientes cupos disponibles' });
     }
 
-    // Contar reservas activas para este vuelo
-    const reservas = await Reserva.count({
-      where: { VueloId: vueloId, estado: 'activo' }
+    const totalReservas = await Reserva.count();
+    const codigoReserva = `${vuelo.id}-${vuelo.origen.substring(0, 3)}-${(totalReservas + 1).toString().padStart(4, '0')}`;
+    const usuario = await Usuario.findByPk(usuarioId);
+
+    // Verificamos si tiene promoción
+    const promo = await Promocion.findOne({ where: { vueloId } });
+    const precioUnitario = promo ? Math.round(vuelo.precio * (1 - promo.porcentaje / 100)) : vuelo.precio;
+    const total = precioUnitario * pasajeros.length;
+
+    // Crear reserva
+    const reserva = await Reserva.create({
+      codigoReserva,
+      correoUsuario: usuario.correo,
+      correoReserva,
+      titularReserva: `${pasajeros[0].nombre} ${pasajeros[0].apellido}`,
+      cantidadPasajeros: pasajeros.length,
+      total,
+      VueloId: vueloId,
+      UsuarioId: usuarioId,
+      estado: 'activo'
     });
 
-    // Validar capacidad
-    if (reservas >= vuelo.capacidad) {
-      return res.status(400).json({ mensaje: 'Este vuelo ya está lleno' });
+    // Guardar pasajeros
+    for (const p of pasajeros) {
+      await Pasajero.create({
+        nombre: p.nombre,
+        apellido: p.apellido,
+        documento: p.documento,
+        ReservaId: reserva.codigoReserva, // clave foránea personalizada
+        VueloId: vueloId,
+        codigoReserva
+      });
     }
 
-    // Crear la reserva
-    const nuevaReserva = await Reserva.create({
-      UsuarioId: usuarioId,
-      VueloId: vueloId,
-      estado: 'activo'
+    // Guardar tarjeta
+    await Tarjeta.create({
+      numero: tarjeta.numeroTarjeta,
+      vencimiento: tarjeta.vencimiento,
+      cvv: tarjeta.cvv,
+      codigoReserva
     });
 
     res.status(201).json({
       mensaje: 'Reserva realizada con éxito',
-      reserva: nuevaReserva
+      reserva: {
+        codigoReserva,
+        correoUsuario: usuario.correo,
+        titularReserva: `${pasajeros[0].nombre} ${pasajeros[0].apellido}`,
+        total
+      }
     });
+
   } catch (error) {
-    console.error(error);
+    console.error('❌ Error al procesar la reserva:', error);
     res.status(500).json({ mensaje: 'Error al procesar la reserva' });
   }
 });
 
 module.exports = router;
-

@@ -7,6 +7,7 @@ router.get('/ofertas', async (req, res) => {
     const promociones = await Promocion.findAll({
       include: {
         model: Vuelo,
+        as: 'vuelo', 
         required: true
       }
     });
@@ -17,7 +18,7 @@ router.get('/ofertas', async (req, res) => {
 
     // Procesar los datos para el frontend
     const ofertas = promociones.map(promo => {
-      const vuelo = promo.Vuelo;
+      const vuelo = promo.vuelo;
       const precioOriginal = parseFloat(vuelo.precio);
       const descuento = promo.porcentaje;
       const precioDescuento = Math.round(precioOriginal * (1 - descuento / 100));
@@ -33,7 +34,8 @@ router.get('/ofertas', async (req, res) => {
           origen: vuelo.origen,
           destino: vuelo.destino,
           fechaSalida: vuelo.fechaSalida,
-          horaSalida: vuelo.horaSalida
+          horaSalida: vuelo.horaSalida,
+          precio: vuelo.precio
         }
       };
     });

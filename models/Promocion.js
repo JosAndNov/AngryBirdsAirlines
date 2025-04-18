@@ -17,6 +17,10 @@ const Promocion = sequelize.define('Promocion', {
   fechaFin: {
     type: DataTypes.DATE,
     allowNull: false
+  },
+  vueloId: {
+    type: DataTypes.STRING,
+    allowNull: false
   }
 }, {
   tableName: 'promociones',

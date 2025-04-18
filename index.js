@@ -24,6 +24,10 @@ app.use('/api', vueloRoutes);
 
 const ofertasRoutes = require('./routes/ofertas');
 app.use('/api', ofertasRoutes);
+
+const tuVueloRoutes = require('./routes/tuvuelo');
+app.use('/api/tuvuelo', tuVueloRoutes);
+
   
 app.get('/', (req, res) => {
   res.send('Servidor funcionando correctamente');

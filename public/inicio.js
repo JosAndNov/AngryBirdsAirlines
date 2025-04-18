@@ -47,7 +47,7 @@ formBusqueda.addEventListener('submit', async (e) => {
       <p>Hora de salida: ${vuelo.horaSalida}</p>
       <p>Duración: ${vuelo.duracion}</p>
       <p>Precio: $${vuelo.precio}</p>
-      <button onclick="reservarVuelo(${vuelo.id})">Reservar</button>
+      <button onclick="reservarVuelo('${vuelo.id}')">Reservar</button>
       <hr>
     `;
     resultadoVuelos.appendChild(vueloDiv);

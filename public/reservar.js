@@ -1,5 +1,6 @@
 const cantidadInput = document.getElementById('cantidad');
 const pasajerosContainer = document.getElementById('pasajerosContainer');
+let vuelo = null; // Se asignará al cargar el vuelo
 
 function generarFormularios(cantidad) {
   pasajerosContainer.innerHTML = '';
@@ -13,6 +14,21 @@ function generarFormularios(cantidad) {
     `;
     pasajerosContainer.appendChild(div);
   }
+
+  // Mostrar el total actualizado
+  mostrarTotal();
+}
+
+function mostrarTotal() {
+  const cant = parseInt(cantidadInput.value);
+  if (!vuelo || isNaN(cant)) return;
+
+  const precio = vuelo.tienePromocion ? vuelo.precioFinal : vuelo.precioOriginal;
+  const total = precio * cant;
+
+  document.getElementById('totalPagar').innerHTML = `
+    <p><strong>Total a pagar:</strong> $${total}</p>
+  `;
 }
 
 cantidadInput.addEventListener('change', (e) => {
@@ -20,6 +36,7 @@ cantidadInput.addEventListener('change', (e) => {
   if (cant >= 1 && cant <= 5) {
     generarFormularios(cant);
   }
+  mostrarTotal();
 });
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -42,7 +59,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const vuelo = data.vuelo;
+  vuelo = data.vuelo;
 
   infoVuelo.innerHTML = `
     <h3>Reserva para el vuelo #${vuelo.id}</h3>
@@ -53,11 +70,14 @@ window.addEventListener('DOMContentLoaded', async () => {
       vuelo.tienePromocion
         ? `<p>Precio original: <s>$${vuelo.precioOriginal}</s></p>
            <p><strong>Precio con descuento: $${vuelo.precioFinal}</strong> (${vuelo.porcentajeDescuento}% OFF)</p>`
-        : `<p>Precio: $${vuelo.precioFinal}</p>`
+        : `<p>Precio: $${vuelo.precioOriginal}</p>`
     }
-    <p><strong>Capacidad disponible</strong>: se verificará al confirmar reserva</p>
+    <p><strong>Capacidad disponible:</strong> se verificará al confirmar reserva</p>
+    <div id="totalPagar"></div>
     <hr>
   `;
+
+  mostrarTotal();
 
   const form = document.getElementById('formReserva');
   form.addEventListener('submit', async (e) => {
@@ -86,23 +106,52 @@ window.addEventListener('DOMContentLoaded', async () => {
       }))
     ];
 
+    const numeroTarjeta = document.getElementById('numeroTarjeta').value;
+    const vencimiento = document.getElementById('vencimiento').value;
+    const cvv = document.getElementById('cvv').value;
+
+    // Validación de tarjeta
+    if (!/^\d{16}$/.test(numeroTarjeta)) {
+      alert('El número de tarjeta debe tener exactamente 16 dígitos.');
+      return;
+    }
+    if (!/^\d{2}\/\d{2}$/.test(vencimiento)) {
+      alert('El formato del vencimiento debe ser MM/YY.');
+      return;
+    }
+    if (!/^\d{3}$/.test(cvv)) {
+      alert('El CVV debe tener exactamente 3 dígitos.');
+      return;
+    }
+
     const resReserva = await fetch('/api/reservar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ vueloId, pasajeros })
+      body: JSON.stringify({
+        vueloId,
+        pasajeros,
+        correoReserva: correo,
+        tarjeta: { numeroTarjeta, vencimiento, cvv }
+      })
     });
 
     const result = await resReserva.json();
 
     if (resReserva.ok) {
+      const codigoReserva = result.reserva.codigoReserva;
+      const total = (vuelo.tienePromocion ? vuelo.precioFinal : vuelo.precioOriginal) * pasajeros.length;
+
       const reciboHTML = `
         <h3>🎟️ Comprobante de Reserva</h3>
-        <p><strong>Vuelo:</strong> ${vuelo.origen} → ${vuelo.destino}</p>
+        <p><strong>Vuelo #${vuelo.id}</strong></p>
+        <p><strong>Código de Reserva:</strong> ${codigoReserva}</p>
+        <p><strong>Ruta:</strong> ${vuelo.origen} → ${vuelo.destino}</p>
         <p><strong>Fecha:</strong> ${vuelo.fechaSalida}</p>
         <p><strong>Hora:</strong> ${vuelo.horaSalida}</p>
+        <p><strong>Total pagado:</strong> $${total}</p>
         <hr>
         <h4>Pasajeros:</h4>
         <ul>
@@ -113,16 +162,16 @@ window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('contenidoRecibo').innerHTML = reciboHTML;
       document.getElementById('modalRecibo').style.display = 'block';
     } else {
-      document.getElementById('mensaje').innerText = `❌ ${result.mensaje}`;
+      alert(result.mensaje || '❌ No se pudo completar la reserva.');
+      document.getElementById('mensaje').innerText = `❌ ${result.mensaje || 'Error al procesar la reserva'}`;
     }
   });
 });
 
 document.addEventListener('click', () => {
-    const modal = document.getElementById('modalRecibo');
-    if (modal.style.display === 'block') {
-      modal.style.display = 'none';
-      window.location.href = '/inicio.html';
-    }
-  });
-  
+  const modal = document.getElementById('modalRecibo');
+  if (modal.style.display === 'block') {
+    modal.style.display = 'none';
+    window.location.href = '/inicio.html';
+  }
+});

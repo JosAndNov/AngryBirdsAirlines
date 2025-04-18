@@ -21,18 +21,21 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
   
       data.ofertas.forEach(oferta => {
+        const vuelo = oferta.vuelo; // ✅ Destructura el vuelo
         const div = document.createElement('div');
         div.innerHTML = `
-          <h3>Vuelo #${oferta.vuelo.id}: ${oferta.vuelo.origen} → ${oferta.vuelo.destino}</h3>
-          <p>Fecha: ${oferta.vuelo.fechaSalida}</p>
-          <p>Hora: ${oferta.vuelo.horaSalida}</p>
-          <p>Precio original: <s>$${oferta.precioOriginal}</s></p>
-          <p><strong>Precio con descuento: $${oferta.precioDescuento}</strong></p>
-          <button onclick="reservarVuelo(${oferta.vuelo.id})">Reservar</button>
+          <h3>Vuelo #${vuelo.id}: ${vuelo.origen} → ${vuelo.destino}</h3>
+          <p>Fecha: ${vuelo.fechaSalida}</p>
+          <p>Hora: ${vuelo.horaSalida}</p>
+          <p>Precio original: <s>$${vuelo.precio}</s></p>
+          <p><strong>Precio con descuento: $${Math.round(vuelo.precio * (1 - oferta.porcentaje / 100))}</strong></p>
+          <button onclick="reservarVuelo('${vuelo.id}')">Reservar</button>
           <hr>
         `;
         listaOfertas.appendChild(div);
       });
+      
+      
     } catch (error) {
       console.error(error);
       listaOfertas.innerText = 'Error al cargar ofertas.';
