@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         <ul>
           ${r.pasajeros.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
         </ul>
-        <button onclick="modificarReserva('${r.codigoReserva}')">✏️ Modificar</button>
+        <button onclick="window.location.href='/modificar.html?reserva=${r.codigoReserva}'">Modificar reserva</button>
         <button onclick="cancelarReserva('${r.codigoReserva}', '${r.vuelo.id}')">❌ Cancelar</button>
         <hr>
       `;
