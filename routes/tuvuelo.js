@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const verificarToken = require('../middleware/auth');
 const { Reserva, Vuelo, Pasajero, Tarjeta } = require('../models');
+const enviarCorreo = require('../utils/correo');
+
 
 
 // 🔐 Obtener reservas activas del usuario autenticado
@@ -31,16 +33,21 @@ router.get('/', verificarToken, async (req, res) => {
 });
 
 // Cancelar reserva
-// Cancelar reserva
 router.delete('/cancelar/:codigoReserva', verificarToken, async (req, res) => {
   const { codigoReserva } = req.params;
 
   try {
-    const reserva = await Reserva.findOne({ where: { codigoReserva } });
+    const reserva = await Reserva.findOne({
+      where: { codigoReserva },
+      include: {
+        model: Vuelo,
+        as: 'vuelo'
+      }
+    });
 
     if (!reserva) return res.status(404).json({ mensaje: 'Reserva no encontrada' });
 
-    const vuelo = await Vuelo.findByPk(reserva.VueloId);
+    const vuelo = reserva.vuelo;
 
     const vueloFecha = new Date(`${vuelo.fechaSalida}T${vuelo.horaSalida}`);
     const ahora = new Date();
@@ -63,6 +70,7 @@ router.delete('/cancelar/:codigoReserva', verificarToken, async (req, res) => {
 
     const reembolso = Math.round(reserva.total * 0.75);
 
+    // 🟢 Enviar respuesta primero
     res.status(200).json({
       mensaje: 'Reserva cancelada con éxito',
       reembolso,
@@ -70,16 +78,34 @@ router.delete('/cancelar/:codigoReserva', verificarToken, async (req, res) => {
       ultimos4
     });
 
+    // 📧 Enviar correo después
+    await enviarCorreo(
+      reserva.correoReserva,
+      '❌ Cancelación de reserva - Angry Birds Airlines',
+      `
+        <h2>❌ Reserva cancelada</h2>
+        <p><strong>Reserva:</strong> ${reserva.codigoReserva}</p>
+        <p><strong>Vuelo:</strong> ${vuelo.origen} → ${vuelo.destino}</p>
+        <p><strong>Fecha:</strong> ${vuelo.fechaSalida} a las ${vuelo.horaSalida}</p>
+        <p><strong>Total pagado:</strong> $${reserva.total}</p>
+        <p><strong>Reembolso (75%):</strong> $${reembolso}</p>
+        <p>💳 Se devolverá a la tarjeta terminada en <strong>${ultimos4}</strong></p>
+        <hr>
+        <p>Gracias por confiar en Angry Birds Airlines 🐦</p>
+      `
+    );
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error al cancelar la reserva' });
   }
 });
 
+
 // ✏️ Modificar reserva (pasajeros y correo)
 router.put('/modificar/:codigoReserva', verificarToken, async (req, res) => {
   const { codigoReserva } = req.params;
-  const { pasajeros, nuevoCorreo } = req.body;
+  const { pasajeros, correoReserva } = req.body;
 
   try {
     const reserva = await Reserva.findOne({
@@ -91,8 +117,8 @@ router.put('/modificar/:codigoReserva', verificarToken, async (req, res) => {
       return res.status(404).json({ mensaje: 'Reserva no encontrada' });
     }
 
-    // Verificar si quedan más de 48 horas
-    const vueloFecha = new Date(`${reserva.vuelo.fechaSalida}T${reserva.vuelo.horaSalida}`);
+    const vuelo = reserva.vuelo;
+    const vueloFecha = new Date(`${vuelo.fechaSalida}T${vuelo.horaSalida}`);
     const ahora = new Date();
     const diferenciaHoras = (vueloFecha - ahora) / 1000 / 3600;
 
@@ -100,7 +126,7 @@ router.put('/modificar/:codigoReserva', verificarToken, async (req, res) => {
       return res.status(400).json({ mensaje: '⛔ No se puede modificar la reserva con menos de 48 horas de anticipación' });
     }
 
-    // Actualizar datos de cada pasajero
+    // Actualizar pasajeros
     for (const p of pasajeros) {
       await Pasajero.update(
         { nombre: p.nombre, apellido: p.apellido, documento: p.documento },
@@ -108,20 +134,48 @@ router.put('/modificar/:codigoReserva', verificarToken, async (req, res) => {
       );
     }
 
-    // Si se modificó el primer pasajero, también cambiar correoReserva y titular
-    if (pasajeros.length > 0) {
-      const pasajero1 = pasajeros[0];
-      reserva.correoReserva = nuevoCorreo;
-      reserva.titularReserva = `${pasajero1.nombre} ${pasajero1.apellido}`;
-      await reserva.save();
+    if (correoReserva && correoReserva !== reserva.correoReserva) {
+      reserva.correoReserva = correoReserva;
     }
 
-    res.status(200).json({ mensaje: 'Reserva modificada correctamente' });
+    reserva.titularReserva = `${pasajeros[0].nombre} ${pasajeros[0].apellido}`;
+    await reserva.save();
+
+    // ✅ Enviar la respuesta al cliente inmediatamente
+    res.status(200).json({
+      mensaje: 'Reserva modificada correctamente',
+      nuevoTitular: reserva.titularReserva,
+      nuevoCorreo: reserva.correoReserva
+    });
+
+    // 📬 Enviar correo en segundo plano (no bloqueante)
+    const htmlCorreo = `
+      <h2>✏️ Tu reserva ha sido modificada</h2>
+      <p><strong>Código de Reserva:</strong> ${reserva.codigoReserva}</p>
+      <p><strong>Vuelo:</strong> ${vuelo.origen} → ${vuelo.destino}</p>
+      <p><strong>Fecha:</strong> ${vuelo.fechaSalida} a las ${vuelo.horaSalida}</p>
+      <p><strong>Nuevo titular:</strong> ${reserva.titularReserva}</p>
+      <p><strong>Nuevo correo:</strong> ${reserva.correoReserva}</p>
+      <hr>
+      <p><strong>Pasajeros actualizados:</strong></p>
+      <ul>
+        ${pasajeros.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
+      </ul>
+      <p>🛫 ¡Gracias por actualizar tu información!</p>
+    `;
+
+    // Enviar correo después, sin esperar su resultado
+    enviarCorreo(reserva.correoReserva, '✏️ Modificación de reserva - Angry Birds Airlines', htmlCorreo)
+      .then(() => console.log('✅ Correo de modificación enviado'))
+      .catch(err => console.error('❌ Error al enviar correo de modificación:', err));
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error al modificar la reserva' });
   }
 });
+
+
 
 // 🔍 Obtener detalle de reserva para modificar
 router.get('/detalle/:codigoReserva', verificarToken, async (req, res) => {

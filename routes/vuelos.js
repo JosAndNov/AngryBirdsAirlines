@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const verificarToken = require('../middleware/auth');
 const { Vuelo, Reserva, Pasajero, Usuario, Promocion, Tarjeta } = require('../models');
+const enviarCorreo = require('../utils/correo');
 
 // 🔍 Buscar vuelos por origen, destino y fecha
 router.get('/vuelos', async (req, res) => {
@@ -66,6 +67,10 @@ router.post('/reservar', verificarToken, async (req, res) => {
     const { vueloId, pasajeros, correoReserva, tarjeta } = req.body;
     const usuarioId = req.usuario.id;
 
+    if (!correoReserva) {
+      return res.status(400).json({ mensaje: 'El correo de la reserva es obligatorio.' });
+    }    
+
     const vuelo = await Vuelo.findByPk(vueloId);
     if (!vuelo) return res.status(404).json({ mensaje: 'Vuelo no encontrado' });
 
@@ -116,15 +121,50 @@ router.post('/reservar', verificarToken, async (req, res) => {
       codigoReserva
     });
 
-    res.status(201).json({
-      mensaje: 'Reserva realizada con éxito',
-      reserva: {
-        codigoReserva,
-        correoUsuario: usuario.correo,
-        titularReserva: `${pasajeros[0].nombre} ${pasajeros[0].apellido}`,
-        total
-      }
-    });
+    const htmlReserva = `
+  <h2>🎟️ Comprobante de Reserva</h2>
+  <p><strong>Reserva:</strong> ${codigoReserva}</p>
+  <p><strong>Vuelo:</strong> ${vuelo.origen} → ${vuelo.destino}</p>
+  <p><strong>Fecha:</strong> ${vuelo.fechaSalida}</p>
+  <p><strong>Hora:</strong> ${vuelo.horaSalida}</p>
+  <p><strong>Total pagado:</strong> $${total}</p>
+  <hr>
+  <h4>Pasajeros:</h4>
+  <ul>
+    ${pasajeros.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
+  </ul>
+  <p>✅ ¡Gracias por reservar con Angry Birds Airlines!</p>
+  `;
+
+  res.status(201).json({
+    mensaje: 'Reserva realizada con éxito',
+    reserva: {
+      codigoReserva,
+      correoUsuario: usuario.correo,
+      titularReserva: `${pasajeros[0].nombre} ${pasajeros[0].apellido}`,
+      total
+    }
+  }); 
+
+  await enviarCorreo(
+    correoReserva,
+    '✈️ Confirmación de reserva - Angry Birds Airlines',
+    `
+      <h2>¡Reserva confirmada!</h2>
+      <p>Gracias por reservar con Angry Birds Airlines.</p>
+      <p><strong>Código de Reserva:</strong> ${codigoReserva}</p>
+      <p><strong>Vuelo:</strong> ${vuelo.origen} → ${vuelo.destino}</p>
+      <p><strong>Fecha:</strong> ${vuelo.fechaSalida} a las ${vuelo.horaSalida}</p>
+      <p><strong>Pasajeros:</strong></p>
+      <ul>
+        ${pasajeros.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
+      </ul>
+      <p>🧾 Total pagado: $${total}</p>
+      <hr>
+      <p>Gracias por confiar en nosotros. ¡Buen vuelo! 🛫</p>
+    `
+  );
+  
 
   } catch (error) {
     console.error('❌ Error al procesar la reserva:', error);

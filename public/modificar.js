@@ -70,7 +70,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ pasajeros: pasajerosMod, nuevoCorreo })
+          body: JSON.stringify({ pasajeros: pasajerosMod, correoReserva: nuevoCorreo })
         });
   
         const resultado = await resMod.json();
