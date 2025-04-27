@@ -45,8 +45,9 @@ window.addEventListener('DOMContentLoaded', async () => {
         <ul>
           ${r.pasajeros.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
         </ul>
-        <button onclick="window.location.href='/modificar.html?reserva=${r.codigoReserva}'">Modificar reserva</button>
+        <button onclick="modificarReserva('${r.codigoReserva}')">✏️ Modificar pasajeros</button>
         <button onclick="cancelarReserva('${r.codigoReserva}', '${r.vuelo.id}')">❌ Cancelar</button>
+        <button onclick="cambiarFecha('${r.codigoReserva}', '${r.vuelo.origen}', '${r.vuelo.destino}', '${r.vuelo.id}')">🔄 Cambiar fecha</button>
         <hr>
       `;
       contenedor.appendChild(div);
@@ -88,7 +89,6 @@ async function cancelarReserva(codigoReserva, vueloId) {
       return;
     }
 
-    // Mostrar ventana emergente con la información del reembolso
     const reciboHTML = `
       <h3>✈️ Reserva Cancelada</h3>
       <p><strong>Reserva:</strong> ${codigoReserva}</p>
@@ -107,10 +107,16 @@ async function cancelarReserva(codigoReserva, vueloId) {
   }
 }
 
-// Cierra el modal al hacer clic en cualquier parte
+// 🔄 Nueva función: cambiar fecha
+function cambiarFecha(codigoReserva, origen, destino, vueloIdActual) {
+  const url = `/cambiarFecha.html?reserva=${codigoReserva}&origen=${origen}&destino=${destino}&vueloActual=${vueloIdActual}`;
+  window.location.href = url;
+}
+
+// Modal: cerrar ventana emergente cuando se haga click
 document.addEventListener('click', () => {
   const modal = document.getElementById('modalRecibo');
-  if (modal.style.display === 'block') {
+  if (modal && modal.style.display === 'block') {
     modal.style.display = 'none';
     window.location.reload();
   }
