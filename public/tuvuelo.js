@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   if (usuario) {
     acciones.innerHTML = `<a href="#" onclick="cerrarSesion()">Cerrar sesión</a>`;
-    saludo.innerText = `👤 Bienvenido, ${usuario}`;
+    saludo.innerText = `Bienvenido, ${usuario}`;
   }
 
   try {
@@ -32,25 +32,44 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     data.reservas.forEach(r => {
       const div = document.createElement('div');
-      div.innerHTML = `
-        <h3>✈️ Vuelo #${r.vuelo.id} - ${r.vuelo.origen} → ${r.vuelo.destino}</h3>
-        <p><strong>Código de Reserva:</strong> ${r.codigoReserva}</p>
-        <p><strong>Fecha:</strong> ${r.vuelo.fechaSalida}</p>
-        <p><strong>Hora:</strong> ${r.vuelo.horaSalida}</p>
-        <p><strong>Precio por pasajero:</strong> $${r.vuelo.precio}</p>
-        <p><strong>Total:</strong> $${r.total}</p>
-        <p><strong>Titular:</strong> ${r.titularReserva}</p>
-        <p><strong>Correo de la reserva:</strong> ${r.correoReserva}</p>
-        <h4>Pasajeros:</h4>
-        <ul>
-          ${r.pasajeros.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
-        </ul>
-        <button onclick="modificarReserva('${r.codigoReserva}')">✏️ Modificar pasajeros</button>
-        <button onclick="cancelarReserva('${r.codigoReserva}', '${r.vuelo.id}')">❌ Cancelar</button>
-        <button onclick="cambiarFecha('${r.codigoReserva}', '${r.vuelo.origen}', '${r.vuelo.destino}', '${r.vuelo.id}')">🔄 Cambiar fecha</button>
-        <hr>
-      `;
-      contenedor.appendChild(div);
+      div.classList.add("ticket-vuelo");
+div.innerHTML = `
+  <div class="ticket-contenido-horizontal">
+    <div class="ticket-info-horizontal">
+      <div class="ticket-header">
+        <h3>✈️ Vuelo <span class="codigo-vuelo">#${r.vuelo.id}</span> - ${r.vuelo.origen} → ${r.vuelo.destino}</h3>
+        <span class="precio-vuelo">$${r.vuelo.precio}</span>
+      </div>
+
+      <div class="ticket-body">
+        <div class="columna">
+          <p><strong>Fecha:</strong> ${r.vuelo.fechaSalida}</p>
+          <p><strong>Hora:</strong> ${r.vuelo.horaSalida}</p>
+          <p><strong>Cod. reserva:</strong> ${r.codigoReserva}</p>
+        </div>
+        <div class="columna">
+          <p><strong>Titular:</strong> ${r.titularReserva}</p>
+          <p><strong>Correo:</strong> ${r.correoReserva}</p>
+          <p><strong>Total:</strong> $${r.total}</p>
+        </div>
+        <div class="columna pasajeros">
+  <p><strong>Pasajeros:</strong></p>
+  <ul class="lista-pasajeros">
+    ${r.pasajeros.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
+  </ul>
+</div>
+      </div>
+    </div>
+
+    <div class="ticket-boton-triple">
+      <button class="btn-efecto" onclick="modificarReserva('${r.codigoReserva}')">✏️ Modificar</button>
+      <button class="btn-efecto" onclick="cancelarReserva('${r.codigoReserva}', '${r.vuelo.id}')">❌ Cancelar</button>
+      <button class="btn-efecto" onclick="cambiarFecha('${r.codigoReserva}', '${r.vuelo.origen}', '${r.vuelo.destino}', '${r.vuelo.id}')">🔄 Cambiar fecha</button>
+    </div>
+  </div>
+`;
+contenedor.appendChild(div);
+
     });
 
   } catch (err) {

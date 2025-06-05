@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   
     if (usuario) {
-      saludo.innerText = `👤 Bienvenido, ${usuario}`;
+      saludo.innerText = ` Bienvenido, ${usuario}`;
     }
   
     // Obtener los parámetros de la URL
@@ -48,13 +48,44 @@ window.addEventListener('DOMContentLoaded', async () => {
       data.vuelos.forEach(vuelo => {
         const div = document.createElement('div');
         div.innerHTML = `
-          <h3>✈️ Vuelo #${vuelo.id}: ${vuelo.origen} → ${vuelo.destino}</h3>
-          <p><strong>Fecha:</strong> ${vuelo.fechaSalida}</p>
-          <p><strong>Hora:</strong> ${vuelo.horaSalida}</p>
-          <p><strong>Precio:</strong> $${vuelo.precio}</p>
-          <button onclick="cambiarAVuelo('${codigoReserva}', '${vuelo.id}')">🔄 Cambiar a este vuelo</button>
-          <hr>
-        `;
+        <div class="ticket-vuelo">
+    <div class="ticket-contenido-horizontal">
+      <div class="ticket-info-horizontal">
+        <div class="ticket-header">
+          <h3>✈️ Vuelo <span class="codigo-vuelo">#${vuelo.id}</span> - ${vuelo.origen} → ${vuelo.destino}</h3>
+          <span class="precio-vuelo">$${vuelo.precio}</span>
+        </div>
+
+        <div class="ticket-body">
+          <div class="columna">
+            <p><strong>Fecha:</strong> ${vuelo.fechaSalida}</p>
+            <p><strong>Hora:</strong> ${vuelo.horaSalida}</p>
+          </div>
+          <div class="columna">
+            <p><strong>Duración:</strong> ${vuelo.duracion}</p>
+          </div>
+          <div class="columna">
+            <p><strong>Disponibles:</strong> ${vuelo.disponibles ?? 'N/A'}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticket-boton-final-lateral">
+        <button class="btn-efecto" onclick="cambiarAVuelo('${codigoReserva}', '${vuelo.id}')">
+          🔄 Cambiar a este vuelo
+          <div id="clip">
+            <div id="leftTop" class="corner"></div>
+            <div id="rightBottom" class="corner"></div>
+            <div id="rightTop" class="corner"></div>
+            <div id="leftBottom" class="corner"></div>
+          </div>
+          <span id="rightArrow" class="arrow"></span>
+          <span id="leftArrow" class="arrow"></span>
+        </button>
+      </div>
+    </div>
+    </div>
+  `
         contenedor.appendChild(div);
       });
   

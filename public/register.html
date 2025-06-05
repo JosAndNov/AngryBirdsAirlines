@@ -3,19 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Registro - Angry Birds Airlines</title>
+  <link rel="stylesheet" href="/css/general.css">
+  <link rel="stylesheet" href="/css/register.css">
 </head>
 <body>
-  <h1>Registro</h1>
-  <form id="registerForm">
-    <input type="text" placeholder="Nombre" id="nombre" required><br><br>
-    <input type="text" placeholder="Apellido" id="apellido" required><br><br>
-    <input type="email" placeholder="Correo" id="correo" required><br><br>
-    <input type="password" placeholder="Contraseña" id="contraseña" required><br><br>
-    <input type="checkbox" onclick="mostrarContraseña()"> Mostrar contraseña<br><br>
-    <button type="submit">Registrarse</button>
-  </form>
+  <div class="register-container">
+    <h2>✍️ Registro</h2>
+    <form id="registerForm" class="register-form">
+      <input type="text" placeholder="Nombre" id="nombre" required>
+      <input type="text" placeholder="Apellido" id="apellido" required>
+      <input type="email" placeholder="Correo" id="correo" required>
+      <input type="password" placeholder="Contraseña" id="contraseña" required>
 
-  <p id="mensaje"></p>
+      <label class="checkbox">
+        <input type="checkbox" onclick="mostrarContraseña()"> Mostrar contraseña
+      </label>
+
+      <button type="submit">Registrarse</button>
+    </form>
+
+    <div class="register-link">
+      ¿Ya tienes cuenta? <a href="/login.html">Inicia sesión</a>
+    </div>
+
+    <p id="mensaje"></p>
+  </div>
 
   <script src="./register.js"></script>
 </body>

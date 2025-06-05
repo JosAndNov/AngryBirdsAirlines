@@ -21,19 +21,54 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
   
       data.ofertas.forEach(oferta => {
-        const vuelo = oferta.vuelo; // ✅ Destructura el vuelo
+        const vuelo = oferta.vuelo;
         const div = document.createElement('div');
+        div.classList.add('ticket-vuelo'); // usa el mismo estilo
         div.innerHTML = `
-          <h3>Vuelo #${vuelo.id}: ${vuelo.origen} → ${vuelo.destino}</h3>
-          <p>Fecha: ${vuelo.fechaSalida}</p>
-          <p>Hora: ${vuelo.horaSalida}</p>
-          <p>Precio original: <s>$${vuelo.precio}</s></p>
-          <p><strong>Precio con descuento: $${Math.round(vuelo.precio * (1 - oferta.porcentaje / 100))}</strong></p>
-          <button onclick="reservarVuelo('${vuelo.id}')">Reservar</button>
-          <hr>
-        `;
-        listaOfertas.appendChild(div);
-      });
+  <div class="ticket-contenido-horizontal">
+    <div class="ticket-info-horizontal">
+      <div class="ticket-oferta-header">
+        <h3>🔥 Oferta - Vuelo <span class="codigo-vuelo">#${vuelo.id}</span></h3>
+        <span class="badge-oferta">${oferta.porcentaje}% OFF</span>
+      </div>
+
+      <div class="ticket-body">
+        <div class="columna">
+          <p><strong>Origen:</strong> ${vuelo.origen}</p>
+          <p><strong>Destino:</strong> ${vuelo.destino}</p>
+        </div>
+
+        <div class="columna">
+          <p><strong>Fecha:</strong> ${vuelo.fechaSalida}</p>
+          <p><strong>Hora:</strong> ${vuelo.horaSalida}</p>
+        </div>
+
+        <div class="columna">
+          <p><strong>Duración:</strong> ${vuelo.duracion}</p>
+          <p><strong>Precio antes:</strong> <span class="precio-antes">$${vuelo.precio}</span></p>
+          <p><strong>Precio ahora:</strong> <span class="precio-descuento">$${Math.round(vuelo.precio * (1 - oferta.porcentaje / 100))}</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket-oferta-boton-contenedor">
+      <button class="btn-efecto" onclick="reservarVuelo('${vuelo.id}')">
+        Reservar
+        <div id="clip">
+          <div id="leftTop" class="corner"></div>
+          <div id="rightBottom" class="corner"></div>
+          <div id="rightTop" class="corner"></div>
+          <div id="leftBottom" class="corner"></div>
+        </div>
+        <span id="rightArrow" class="arrow"></span>
+        <span id="leftArrow" class="arrow"></span>
+      </button>
+    </div>
+  </div>
+`;
+
+  listaOfertas.appendChild(div);
+});
       
       
     } catch (error) {

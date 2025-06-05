@@ -1,0 +1,107 @@
+body {
+  background-color: #13324a;
+  font-family: 'Arial', sans-serif;
+  color: white;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Encabezados */
+h1, h2, h3, h4 {
+  color: #FFD728;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Contenedor de la info del vuelo */
+#infoVuelo {
+  background-color: #0f2a3e;
+  border: 2px dashed #FFD728;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+/* Formulario */
+form#formReserva {
+  background-color: #0f2a3e;
+  padding: 40px 50px; /* Más espacio lateral */
+  border-radius: 10px;
+  border: 2px solid #FFD728;
+  max-width: 700px;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* Etiquetas */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+/* Total a pagar */
+#totalReserva, #totalPagar {
+  color: #FFD728;
+  font-size: 18px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* Botón principal */
+form button[type="submit"] {
+  background-color: #FFD728;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  color: #07151E;
+  transition: background 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+  background-color: #f1c500;
+}
+
+/* Recibo */
+#modalRecibo {
+  z-index: 9999;
+}
+
+#contenidoRecibo {
+  background-color: #fff;
+  color: #000;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 400px;
+  font-size: 14px;
+}
+
+#contenidoRecibo h3 {
+  color: #13324a;
+  margin-top: 0;
+  font-size: 20px;
+}

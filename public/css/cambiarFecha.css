@@ -1,0 +1,44 @@
+/* Estilo para el saludo del usuario */
+#saludoUsuario {
+  text-align: left;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #13324a;
+  font-weight: bold;
+}
+
+/* Estilo para el título principal */
+h1 {
+  text-align: center;
+  font-size: 28px;
+  color: #ffffff;
+  margin: 25px 0 10px 0;
+  text-shadow: 1px 1px 4px black;
+}
+
+.ticket-vuelo {
+  margin-bottom: 40px; /* Espacio entre tickets */
+}
+
+.ticket-body .columna p {
+  font-size: 15px;
+  line-height: 1.6; /* Mejor lectura */
+}
+
+/* Botones exclusivos para modales */
+.btn-modal {
+  all: unset;
+  background-color: #eeeeee;
+  color: #333;
+  font-weight: bold;
+  border: 1px solid #bbb;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin: 10px 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-modal:hover {
+  background-color: #dddddd;
+}

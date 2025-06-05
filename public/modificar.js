@@ -82,7 +82,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             <p><strong>Vuelo:</strong> ${reserva.vuelo.origen} → ${reserva.vuelo.destino}</p>
             <p><strong>Fecha:</strong> ${reserva.vuelo.fechaSalida} a las ${reserva.vuelo.horaSalida}</p>
             <p><strong>Nuevo correo:</strong> ${nuevoCorreo}</p>
-            <h4>🧍 Pasajeros actualizados:</h4>
+            <h3>🧍 Pasajeros actualizados:</h3>
             <ul>
               ${pasajerosMod.map(p => `<li>${p.nombre} ${p.apellido} - ${p.documento}</li>`).join('')}
             </ul>

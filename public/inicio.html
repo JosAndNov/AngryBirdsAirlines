@@ -3,32 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <title>Inicio - Angry Birds Airlines</title>
+  <link rel="stylesheet" href="/css/general.css">
+  <link rel="stylesheet" href="/css/inicio.css">
 </head>
 <body>
-  <h1>Angry Birds Airlines 🐦</h1>
-  <div id="usuarioInfo"></div>
-
-  <nav>
-    <a href="/inicio.html">Inicio</a> |
-    <a href="/ofertas.html">Ofertas</a> |
-    <span id="usuarioAcciones"></span> |
-    <a href="/tuvuelo.html">Tu vuelo</a>
-  </nav>
   
-  <div id="saludoUsuario" style="margin-top: 10px;"></div>
+  <header>
+    <div class="header-logos" style="text-align: center; margin-top: 10px;">
+      <img src="/img/logoSolo.png" alt="Logo Angry Birds" class="logo">
+      <br>
+      <img src="/img/letrero.png" alt="Angry Birds Airlines" class="letrero">
+    </div>  
+    <nav class="navbar" style="margin-top: 20px; text-align: center;">
+      <a href="/inicio.html" class="active">Inicio</a>
+      <a href="/ofertas.html">Ofertas</a>
+      <a href="/tuvuelo.html">Tu Vuelo</a>
+      <a href="/login.html" id="usuarioAcciones"></a>
+    </nav>
+  </header>
 
-  <hr>
+  <main>
 
-  <h2>Buscar vuelos</h2>
-  <form id="formBusqueda">
-    <input type="text" id="origen" placeholder="Origen" required>
-    <input type="text" id="destino" placeholder="Destino" required>
-    <input type="date" id="fecha" required>
-    <button type="submit">Buscar</button>
-  </form>
+    <div id="saludoUsuario" class="saludo"></div>
+    <div class="barra-busqueda">
+      <h2>Busca tu vuelo</h2>
+      <form id="formBusqueda">
+        <input type="text" id="origen" placeholder="Origen" required>
+        <input type="text" id="destino" placeholder="Destino" required>
+        <input type="date" id="fecha" required>
+        <button type="submit" class="btn-efecto">Buscar</button>
+      </form>
+    </div>
 
-  <div id="resultadoVuelos"></div>
+    <div id="resultadoVuelos"></div>
+  </main>
 
   <script src="./inicio.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,247 @@
+/* Fondo principal del sitio */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: #13324a;
+  }
+  
+  /* Estilo para el header completo */
+  header {
+    background-color: #07151E;
+    padding: 20px 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: auto;/* Altura automática */
+    gap: 15px;  /* Agrandado */
+  }
+  
+  /* Contenedor de logo y letrero */
+  .header-logos {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Logo principal */
+  .header-logos img.logo {
+    height: 125px; /* Aumentamos */
+    margin-right: 15px;
+    width: auto;
+  }
+  
+  /* Letrero de Angry Birds Airlines */
+  .header-logos img.letrero {
+    width: 275px; 
+    height: auto; /* Aumentamos */
+  }
+  
+  /* Barra de navegación */
+  nav.navbar {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+  
+  /* Estilo general de links de navegación */
+  nav.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px; /* Más grande */
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  
+  /* Hover sobre los links */
+  nav.navbar a:hover {
+    color: #FFD728; /* Amarillo bonito */
+  }
+  
+  /* Página activa resaltada */
+  nav.navbar a.active {
+    color: #FFD728;
+    border-bottom: 2px solid #FFD728;
+  }
+  
+  /* Opcional: efecto sutil */
+  nav.navbar a {
+    padding-bottom: 5px;
+  }
+
+  /* Estilo para el saludo del usuario */
+.saludo {
+    margin-top: 10px;
+    margin-right: 20px;
+    margin-left: 20px;
+    text-align: left;
+    font-size: 23px;
+    color: #f1f0eb; /* Solo el texto amarillo */
+    font-weight: normal;
+  }
+  
+.btn-efecto {
+  width: 10em;
+  position: relative;
+  height: 3.5em;
+  border: 3px ridge #FFD728;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 1s;
+  border-radius: 0.3em;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-efecto::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #13324a;
+  transition: 0.5s;
+  transform-origin: center;
+}
+
+.btn-efecto::before {
+  content: "";
+  transform-origin: center;
+  position: absolute;
+  top: 80%;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: #13324a;
+  transition: 0.5s;
+}
+
+.btn-efecto:hover::before, .btn-efecto:hover::after {
+  transform: scale(0)
+}
+
+.btn-efecto:hover {
+  box-shadow: inset 0px 0px 25px #FFD728;
+}
+
+/* =============== CONTENEDOR DE RESULTADOS =============== */
+#resultadoVuelos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+/* ================= TICKET BOLETO ================= */
+.ticket-vuelo {
+  width: 700px;
+  background: linear-gradient(135deg, #0f2a3e, #123652);
+  border: 2px dashed #FFD728;
+  border-radius: 15px;
+  padding: 20px 25px;
+  color: white;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Efecto desgarrado tipo boleto */
+.ticket-vuelo::before,
+.ticket-vuelo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 25px;
+  height: 100%;
+  background: radial-gradient(circle, #07151E 60%, transparent 60%);
+  z-index: 1;
+}
+
+.ticket-vuelo::before {
+  left: -12.5px;
+}
+
+.ticket-vuelo::after {
+  right: -12.5px;
+}
+
+/* =================== CONTENIDO =================== */
+.ticket-contenido-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Encabezado */
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-header h3 {
+  font-size: 22px;
+  margin: 0;
+  color: #FFD728;
+}
+
+.codigo-vuelo {
+  font-weight: normal;
+}
+
+.precio-vuelo {
+  font-size: 20px;
+  color: #FFD728;
+  font-weight: bold;
+}
+
+/* Cuerpo con columnas */
+.ticket-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.ticket-body .columna {
+  flex: 1;
+}
+
+.ticket-body .columna p {
+  margin: 5px 0;
+  color: #ffffff;
+}
+
+.ticket-body strong {
+  color: #FFD728;
+}
+
+/* Parte izquierda (info del vuelo) */
+.ticket-info-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 75%;
+}
+
+/* =================== BOTÓN FINAL =================== */
+
+/* Parte derecha (botón) */
+.ticket-boton-final-lateral {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 25%;
+}
+
+/* Asegura que el botón mantenga tamaño adecuado */
+.ticket-boton-final-lateral button.btn-efecto {
+  transform: scale(0.9);
+}
+
+  

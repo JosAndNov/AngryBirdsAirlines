@@ -1,0 +1,111 @@
+/* Estilo para el saludo del usuario */
+#saludoUsuario {
+  text-align: left;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Estilo para el título principal */
+h2 {
+  text-align: center;
+  font-size: 28px;
+  color: #ffffff;
+  margin: 25px 0 10px 0;
+  text-shadow: 1px 1px 4px black;
+}
+
+
+.ticket-oferta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-oferta-header h3 {
+  font-size: 22px;
+  color: #FFD728;
+  margin: 0;
+}
+
+.badge-oferta {
+  background-color: #ff4747;
+  color: white;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 14px;
+  box-shadow: 0 0 5px rgba(255, 71, 71, 0.8);
+}
+
+.precio-oferta {
+  font-size: 16px;
+  color: #FFD728;
+}
+
+.precio-oferta s {
+  color: #ffbaba;
+  margin-right: 6px;
+}
+
+.precio-descuento {
+  color: #00ff9f;
+  font-weight: bold;
+}
+
+
+.ticket-oferta-boton-contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+.precio-antes {
+  color: #ff9d9d;
+  font-weight: normal;
+  text-decoration: line-through;
+}
+
+.precio-descuento {
+  color: #00ff9f;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.badge-oferta {
+  background-color: #ff4747;
+  color: white;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 14px;
+  box-shadow: 0 0 5px rgba(255, 71, 71, 0.8);
+}
+
+.oferta-titulo-con-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.oferta-titulo-con-badge h3 {
+  margin: 0;
+  color: #FFD728;
+  font-size: 22px;
+}
+
+.badge-oferta {
+  background-color: #ff4747;
+  color: white;
+  padding: 6px 12px;
+  font-weight: bold;
+  border-radius: 6px;
+  font-size: 15px;
+  box-shadow: 0 0 5px rgba(255, 71, 71, 0.8);
+  white-space: nowrap;
+}

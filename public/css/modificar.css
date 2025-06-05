@@ -1,0 +1,86 @@
+body {
+  background-color: #0f2a3e;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  padding: 30px;
+  margin: 0;
+}
+
+h1, h3, h4 {
+  color: #FFD728;
+  text-align: center;
+}
+
+#infoReserva {
+  background-color: #123652;
+  border: 2px dashed #FFD728;
+  border-radius: 10px;
+  padding: 25px;
+  margin: 20px auto;
+  width: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#formModificar {
+  background-color: #123652;
+  border: 2px dashed #FFD728;
+  border-radius: 10px;
+  padding: 25px;
+  width: 50%;
+  margin: 30px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#pasajerosContainer div {
+  margin-bottom: 30px;
+}
+
+#pasajerosContainer input,
+#nuevoCorreo {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+#formModificar button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 25px;
+  padding: 12px 30px;
+  background-color: #FFD728;
+  color: #123652;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#formModificar button:hover {
+  background-color: #e6c21f;
+}
+
+/* Confirmación */
+#modalConfirmacion h3 {
+  color: #123652;
+}
+
+#modalConfirmacion button {
+  margin-top: 20px;
+  padding: 10px 25px;
+  background-color: #FFD728;
+  color: #123652;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#contenidoConfirmacion {
+  color: black;
+}

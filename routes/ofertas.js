@@ -35,6 +35,7 @@ router.get('/ofertas', async (req, res) => {
           destino: vuelo.destino,
           fechaSalida: vuelo.fechaSalida,
           horaSalida: vuelo.horaSalida,
+          duracion: vuelo.duracion,
           precio: vuelo.precio
         }
       };
