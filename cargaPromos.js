@@ -9,10 +9,10 @@ async function cargarPromociones() {
   const promociones = [
     {
       descripcion: 'Descuento por socio nuevo',
-      porcentaje: 50,
+      porcentaje: 80,
       fechaInicio: '2025-04-01',
       fechaFin: '2025-05-25',
-      vueloId: 'ABA0043' 
+      vueloId: 'ABA0050' 
     }
   ];
 
